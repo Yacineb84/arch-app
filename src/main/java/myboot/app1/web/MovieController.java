@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import myboot.app1.dao.MovieRepository;
 import myboot.app1.model.Movie;
+import myboot.app1.model.Views;
 
 /**
  * Un contrôleur pour gérer les films.

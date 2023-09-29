@@ -1,5 +1,6 @@
 package myboot.app3.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
@@ -7,6 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,4 +89,15 @@ public class TestHelloRestController {
 				  String.class);
 		Assertions.assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
 	}
+	
+	/*@Test
+    public void testHeader() {
+    	RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("myHeader", "myHeaderValue");
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange("http://localhost:8081/api/headers",
+                    HttpMethod.GET, entity, String.class);
+        assertEquals(response.getHeaders(), entity.getHeaders());
+    }*/
 }

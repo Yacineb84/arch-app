@@ -3,9 +3,11 @@ package myboot.app3.web;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,6 +43,17 @@ public class HelloRestController {
     @GetMapping(value = "/noContent")
     public ResponseEntity noContent() {
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping(value = "/headers")
+    public ResponseEntity<String> headers(@RequestHeader String myHeader) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("resultHeader", myHeader.toUpperCase());
+        var res = ResponseEntity.ok()//
+                .headers(responseHeaders)//
+                .header("xx", "yy")//
+                .body("HEADER " + myHeader);
+        return res;
     }
 
 }

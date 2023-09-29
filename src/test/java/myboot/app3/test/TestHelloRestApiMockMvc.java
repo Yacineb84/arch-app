@@ -43,15 +43,5 @@ public class TestHelloRestApiMockMvc {
                 .andExpect(status().isOk())//
                 .andExpect(content().json("[10,20,30]"));
     }
-    
-   /* @Test
-    public void testHeader() {
-    	RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("myHeader", "myHeaderValue");
-        HttpEntity entity = new HttpEntity(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url,
-                    HttpMethod.GET, entity, String.class);
-    }*/
 
 }

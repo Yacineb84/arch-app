@@ -15,5 +15,9 @@ public interface MovieRepository extends CrudRepository<Movie, Integer> {
 	List<Movie> findByName(String name);
 
 	List<Movie> findByNameLike(String name);
+	
+	List<Movie> findByNameAndYear(String name, int year);
+	
+	List<Movie> findByYear(int year);
 
 }
