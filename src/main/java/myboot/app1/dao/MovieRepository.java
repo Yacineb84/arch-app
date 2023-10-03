@@ -2,6 +2,7 @@ package myboot.app1.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +13,13 @@ import myboot.app1.model.Movie;
 @Transactional
 public interface MovieRepository extends CrudRepository<Movie, Integer> {
 
-	List<Movie> findByName(String name);
+	Iterable<Movie> findByName(String name);
 
-	List<Movie> findByNameLike(String name);
+	Iterable<Movie> findByNameLike(String name);
 	
-	List<Movie> findByNameAndYear(String name, int year);
+	@Query("select m from Movie m where (m.name like :name) and (:year<0 or :year=m.year)")
+	Iterable<Movie> findByNameAndYear(String name, int year);
 	
-	List<Movie> findByYear(int year);
+	Iterable<Movie> findByYear(int year);
 
 }

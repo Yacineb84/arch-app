@@ -1,10 +1,12 @@
 package myboot.app3.web;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,53 +32,52 @@ import myboot.app1.model.Views;
 @RequestMapping("/api")
 public class MovieRestController {
 
-    @Autowired
-    MovieRepository repo;
-    
-    
+	@Autowired
+	MovieRepository repo;
 
-    @JsonView(Views.Public.class)
-    @GetMapping("/movies")
-    public Iterable<Movie> getMovies(@RequestParam(required = false) String name, @RequestParam(required = false) String year ) {
-    	if (name != null && year != null) return repo.findByNameAndYear(name,Integer.parseInt(year));
-    	if (name == null && year == null) return repo.findAll();
-    	if (name != null && year == null) return repo.findByName(name);
-    	if (name == null && year != null) return repo.findByYear(Integer.parseInt(year));
-    	
-		return null;
-    }
+//	@JsonView(Views.Public.class)
+	@GetMapping("/movies")
+	public List<MovieDTO> getMovies(@RequestParam(required = false, defaultValue = "%") String name,
+			@RequestParam(required = false, defaultValue = "-1") int year) {
+		ModelMapper modelMapper = new ModelMapper();
+		var i = (repo.findByNameAndYear(name, year));
 
-    @JsonView(Views.Public.class)
-    @GetMapping("/movies/{id}")
-    public Movie getMovie(@PathVariable int id) {
-    	//Optional<Movie> opt = repo.findById(id);
-    	Movie movie = repo.findById(id).orElseThrow(() -> new MovieNotFoundException());
-    	return movie;
-    	
-    }
-    
-    @DeleteMapping("/movies/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteMovie(@PathVariable int id) {
-        repo.deleteById(id);
-    }
-    
-    @PostMapping("/movies")
-    public MovieDTO postMovie(@RequestBody @Valid MovieDTO m) {
-    	ModelMapper modelMapper = new ModelMapper();
-    	Movie movie = modelMapper.map(m, Movie.class);
-    	repo.save(movie);
-        return m;
-    }
-    
-    @PutMapping("/movies/{id}")
-    public Movie putMovie(@RequestBody @Valid Movie m, @PathVariable int id) {
-    	Movie movie = repo.findById(id).orElseThrow(() -> new MovieNotFoundException());
+		List<MovieDTO> movies = modelMapper.map(i, new TypeToken<List<MovieDTO>>() {
+		}.getType());
+		return movies;
+	}
 
-    	movie.setName(m.getName());
-    	movie.setYear(m.getYear());
-    	movie.setDescription(m.getDescription());
-        repo.save(movie);
-        return movie;
-    }
+	@JsonView(Views.Public.class)
+	@GetMapping("/movies/{id}")
+	public Movie getMovie(@PathVariable int id) {
+		// Optional<Movie> opt = repo.findById(id);
+		Movie movie = repo.findById(id).orElseThrow(() -> new MovieNotFoundException());
+		return movie;
+
+	}
+
+	@DeleteMapping("/movies/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	void deleteMovie(@PathVariable int id) {
+		repo.deleteById(id);
+	}
+
+	@PostMapping("/movies")
+	public MovieDTO postMovie(@RequestBody @Valid MovieDTO m) {
+		ModelMapper modelMapper = new ModelMapper();
+		Movie movie = modelMapper.map(m, Movie.class);
+		repo.save(movie);
+		return m;
+	}
+
+	@PutMapping("/movies/{id}")
+	public Movie putMovie(@RequestBody @Valid Movie m, @PathVariable int id) {
+		Movie movie = repo.findById(id).orElseThrow(() -> new MovieNotFoundException());
+
+		movie.setName(m.getName());
+		movie.setYear(m.getYear());
+		movie.setDescription(m.getDescription());
+		repo.save(movie);
+		return movie;
+	}
 }

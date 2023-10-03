@@ -32,12 +32,16 @@ public class MovieDTO {
 	
 	private String description;
 
-public MovieDTO(int id, String name, @Min(2000) @Max(2100) int year, String description) {
+	public MovieDTO(int id, String name, @Min(2000) @Max(2100) int year, String description) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.year = year;
 		this.description = description;
+	}
+	
+	public String getCompleteName() {
+	    return getName() + " " + getYear();
 	}
 
 }
