@@ -29,7 +29,6 @@ const myApp = {
 			.then(r => {
 				console.log("Affichage des films");
 				this.movies = r.data;
-				console.log(this.movies);
 				
 			})
 		},
@@ -48,7 +47,6 @@ const myApp = {
 			this.axios.delete('/movies/'+ m.id)
 			.then(r => {
 				this.getMovies();
-				console.log(movies);
 				});
     
 		}
