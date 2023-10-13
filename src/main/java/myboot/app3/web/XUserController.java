@@ -23,7 +23,7 @@ import myboot.app3.dao.UserRepository;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
+public class XUserController {
 	
 	@Autowired
 	UserRepository userdao;

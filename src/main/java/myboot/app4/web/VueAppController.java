@@ -11,5 +11,10 @@ public class VueAppController {
     private ModelAndView hello() {
         return new ModelAndView("app");
     }
+    
+    @RequestMapping(value = "/ex-routage")
+    private ModelAndView route() {
+        return new ModelAndView("ex-routage");
+    }
 
 }
