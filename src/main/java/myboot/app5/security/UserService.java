@@ -75,8 +75,8 @@ public class UserService {
 		this.jwtTokenProvider.addToken(token);
 	}
 	
-	public List logout(String token) {
-		this.jwtTokenProvider.removeToken(token);
+	public List<String> logout(HttpServletRequest req) {
+		this.jwtTokenProvider.removeToken(jwtTokenProvider.resolveToken(req));
 		return this.jwtTokenProvider.getJwtList();
 	}
 

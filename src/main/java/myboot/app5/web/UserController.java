@@ -94,8 +94,8 @@ public class UserController {
 	 */
 	@GetMapping("/logout")
 	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-	public List logout(HttpServletRequest req) {
-		return userService.logout(req.getHeader("Authorization"));
+	public List<String> logout(HttpServletRequest req) {
+		return userService.logout(req);
 	}
 
 }

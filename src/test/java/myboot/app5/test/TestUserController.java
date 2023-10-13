@@ -19,7 +19,7 @@ import myboot.app5.web.XUserDTO;
 
 @SpringBootTest
 public class TestUserController {
-/*
+
 	@Test
 	public void login() {
 		HttpHeaders headers = new HttpHeaders();
@@ -40,7 +40,7 @@ public class TestUserController {
 		Assertions.assertEquals(meResponse.getStatusCode(), HttpStatus.OK);
 		Assertions.assertEquals(meResponse.getBody().getUsername(),"aaa");
 	}
-	*/
+	
 	@Test
 	public void logout() {
 		HttpHeaders headers = new HttpHeaders();
@@ -51,6 +51,8 @@ public class TestUserController {
 		ResponseEntity<String> response
 		  = restTemplate.exchange(url,HttpMethod.POST,entity,String.class);
 
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		System.out.println("Mes token avant =========== " + response.getBody());
 		String token = "Bearer " + response.getBody();;
 		headers.set("Authorization", token);
 		HttpEntity<String> jwtEntity = new HttpEntity<String>(headers);
@@ -58,6 +60,7 @@ public class TestUserController {
 		ResponseEntity<ArrayList> meResponse = restTemplate.exchange("http://localhost:8081/secu-users/logout", HttpMethod.GET, jwtEntity,
 				ArrayList.class);
 		Assertions.assertEquals(meResponse.getStatusCode(), HttpStatus.OK);
-		System.out.println("Mes token =========== " + meResponse.getBody());
+		Assertions.assertTrue(meResponse.getBody().isEmpty());
+		System.out.println("Mes token  apres =========== " + meResponse.getBody());
 	}
 }

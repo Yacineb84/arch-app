@@ -12,15 +12,40 @@
 		<a class="navbar-brand" href="#" v-on:click="setAdd()">Add Movie</a> <a
 			class="navbar-brand" href="#" v-on:click="listMovies()">Liste des
 			films</a>
-	</nav>
-	<div class="container" v-if="(movie == null)">
-		<h1>Liste des films</h1>
+		<button class="btn btn-primary btn-sm" v-if="!isLogin"
+			v-on:click="setLog()">Login</button>
 
+	</nav>
+
+	<div class="container" v-if="(log != null)">
+		<form id="app" method="post" novalidate="true">
+
+			<div class="form-group">
+				<label>Username :</label> <input v-model="log.username"
+					class="form-control" v-bind:class="{'is-invalid':errors.username}" />
+			</div>
+				<div class="form-group">
+					<label>Password :</label> <input v-model="log.password"
+						type="password" class="form-control"
+						v-bind:class="{'is-invalid':errors.passsword}" />
+				</div>
+				<div class="form-group">
+					<button v-on:click.prevent="login()" class="btn btn-primary">
+						Connexion</button>
+
+				</div>
+		</form>
+	</div>
+
+
+	<div class="container" v-if="(movie == null && log == null)">
+		<h1>Liste des films</h1>
+		<!--
 		<message text="Une info" clazz="alert alert-primary"></message>
 		<message text="Une alerte" clazz="alert alert-warning"></message>
 		<counter ref ="count"> 
 			
-		</counter>
+		</counter> -->
 
 		<table class="table">
 			<tr>

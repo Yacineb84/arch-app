@@ -13,6 +13,8 @@ const myApp = {
 			editable: null,
 			add:null,
 			errors: [],
+			isLogin: false,
+			log:null,
 		}
 	},
 
@@ -21,6 +23,12 @@ const myApp = {
 		console.log("Mounted ");
 		this.axios = axios.create({
 			baseURL: 'http://localhost:8081/api/',
+			timeout: 1000,
+			headers: { 'Content-Type': 'application/json' ,
+						'Authorization' : '' },
+		});
+		this.axios2 = axios.create({
+			baseURL: 'http://localhost:8081/secu-users/',
 			timeout: 1000,
 			headers: { 'Content-Type': 'application/json' },
 		});
@@ -67,8 +75,7 @@ const myApp = {
 
 		deleteMovie: function(m) {
 			console.log("Suppression du film");
-			console.log(this.$refs.count.counter);
-			this.$refs.count.increment();
+			//this.$refs.count.increment();
 			//this.$refs.count.change(this.$refs.count.counter);
 			this.axios.delete('/movies/' + m.id)
 				.then(r => {
@@ -106,6 +113,28 @@ const myApp = {
 			this.axios.post("/movies", this.add)
 			.then(r => {
 					console.log("Ajout fait ! ")
+					this.listMovies();
+				});
+		},
+		
+		setLog: function(){
+			this.log = {
+				username:'',
+				password: ''
+			};
+			this.movies = null;
+		},
+		
+		login: function(){
+			console.log("Connexion...");
+			this.axios2.post("/login?username="+this.log.username+"&password="+this.log.password)
+			.then(r => {
+					console.log("Connexion réussite ! ")
+					this.isLogin = true;
+					this.log = null;
+					//console.log(this.axios.headers['Authorization']);
+					this.axios.headers.Authorization = r.data;
+					console.log(this.axios.headers['Authorization']);
 					this.listMovies();
 				});
 		},
