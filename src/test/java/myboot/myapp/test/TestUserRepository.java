@@ -19,19 +19,30 @@ public class TestUserRepository {
 	MyUserRepository r;
 	
 	@Test
-	public void save() {
+	public void createAndRead() {
 		var u = r.save(new MyUser("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
 		var u2 = r.findById(u.getId());
 		assertEquals(u2.get().getName(), "Yacine");
 	}
 	
 	@Test
-	public void remove() {
+	public void delete() {
 		MyUser u = new MyUser("Anis","Fong","anis@gmail.com","mon site", "18/08/1998", "mdp");
 		r.save(u);
 		r.delete(u);
 		var u2 = r.findById(u.getId());
 		assertEquals(u2.isEmpty(), true);
+	}
+	
+	@Test
+	public void update() {
+		MyUser user = r.save(new MyUser("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
+		Optional<MyUser> u = r.findById(user.getId());
+		assertEquals(u.get().getName(), "Yacine");
+		u.get().setName("Chong");
+		r.save(u.get());
+		Optional<MyUser> new_u = r.findById(user.getId());
+		assertEquals(new_u.get().getName(), "Chong");
 	}
 
 }
