@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.experimental.var;
 import myboot.myapp.dao.MyUserRepository;
 import myboot.myapp.model.MyUser;
 
@@ -27,7 +26,7 @@ public class TestUserRepository {
 	
 	@Test
 	public void delete() {
-		MyUser u = new MyUser("Anis","Fong","anis@gmail.com","mon site", "18/08/1998", "mdp");
+		MyUser u = new MyUser("Anis","Busse","anis@gmail.com","mon site", "18/08/1998", "mdp");
 		r.save(u);
 		r.delete(u);
 		var u2 = r.findById(u.getId());
