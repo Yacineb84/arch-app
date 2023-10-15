@@ -18,7 +18,7 @@ public class TestActivityRepository {
 	MyActivityRepository r;
 	
 	@Test
-	public void createActivity() {
+	public void createAndReadActivity() {
 		var u = r.save(new Activity(2023,"nature","title","description","webaddress.com"));
 		var u2 = r.findById(u.getId());
 		assertEquals(u2.get().getNature(), "nature");

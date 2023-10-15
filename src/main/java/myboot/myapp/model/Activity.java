@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -27,7 +28,7 @@ public class Activity {
     private Long id;
     
     @Basic
-    @NotBlank
+    @NotNull
     private int year;
     
     @Basic
@@ -50,7 +51,7 @@ public class Activity {
     @Exclude
     private Cv cv;
 
-	public Activity(int year, @NotBlank String nature, @NotBlank String title, String description, String webAddress) {
+	public Activity( int year, @NotBlank String nature, @NotBlank String title, String description, String webAddress) {
 		super();
 		this.year = year;
 		this.nature = nature;

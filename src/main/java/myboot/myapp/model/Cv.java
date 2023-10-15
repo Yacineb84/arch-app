@@ -19,10 +19,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
+
 @Entity
 @Table(name = "cv")
 @Data
 @NoArgsConstructor
+
 public class Cv {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +40,13 @@ public class Cv {
     @JoinColumn
     @Exclude
     private MyUser user;
+
+	public Cv(List<Activity> activities, MyUser user) {
+		super();
+		this.activities = activities;
+		this.user = user;
+	}
+    
+    
 
 }

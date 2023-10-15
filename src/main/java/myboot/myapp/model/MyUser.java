@@ -43,7 +43,7 @@ public class MyUser {
     private String password;
     
     @JsonManagedReference
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",orphanRemoval = true)
     @Exclude
     private Cv cv;
 
