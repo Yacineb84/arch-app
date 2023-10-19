@@ -12,29 +12,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import myboot.myapp.dao.MyActivityRepository;
-import myboot.myapp.dao.MyCvRepository;
-import myboot.myapp.dao.MyUserRepository;
+import myboot.myapp.dao.ActivityRepository;
+import myboot.myapp.dao.CvRepository;
+import myboot.myapp.dao.UserRepository;
 import myboot.myapp.model.Activity;
 import myboot.myapp.model.Cv;
-import myboot.myapp.model.MyUser;
+import myboot.myapp.model.User;
 
 @SpringBootTest
 public class TestCvRepository {
 	
 	@Autowired
-	MyActivityRepository activityRepo;
+	ActivityRepository activityRepo;
 	
 	@Autowired
-	MyCvRepository cvRepo;
+	CvRepository cvRepo;
 	
 	@Autowired
-	MyUserRepository userRepo;
+	UserRepository userRepo;
 	
 	@Test
 	public void createAndRead() {
 
-		var u = userRepo.save(new MyUser("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
+		var u = userRepo.save(new User("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
 		List<Activity> activities = new LinkedList<>();
 		Activity activity = new Activity(2023,"nature","title","description","webaddress.com");
 		activityRepo.save(activity);
@@ -47,7 +47,7 @@ public class TestCvRepository {
 	
 	@Test
 	public void delete() {
-		var u = userRepo.save(new MyUser("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
+		var u = userRepo.save(new User("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
 		List<Activity> activities = new LinkedList<>();
 		Activity activity = new Activity(2023,"nature","title","description","webaddress.com");
 		activities.add(activity);
@@ -63,7 +63,7 @@ public class TestCvRepository {
 	@Test
 	@Transactional
 	public void update() {
-		var u = userRepo.save(new MyUser("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
+		var u = userRepo.save(new User("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
 		List<Activity> activities = new LinkedList<>();
 		Activity activity = new Activity(2023,"nature","title","description","webaddress.com");
 		Activity activity2 = new Activity(2023,"sport","title","description","webaddress.com");

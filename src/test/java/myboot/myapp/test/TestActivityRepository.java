@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import myboot.myapp.dao.MyActivityRepository;
+import myboot.myapp.dao.ActivityRepository;
 import myboot.myapp.model.Activity;
 
 @SpringBootTest
 public class TestActivityRepository {
 	
 	@Autowired
-	MyActivityRepository r;
+	ActivityRepository r;
 	
 	@Test
 	public void createAndReadActivity() {

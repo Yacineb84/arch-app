@@ -39,9 +39,9 @@ public class Cv {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     @Exclude
-    private MyUser user;
+    private User user;
 
-	public Cv(List<Activity> activities, MyUser user) {
+	public Cv(List<Activity> activities, User user) {
 		super();
 		this.activities = activities;
 		this.user = user;
