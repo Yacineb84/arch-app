@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
@@ -22,6 +23,7 @@ import lombok.ToString.Exclude;
 @Table(name = "activity")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

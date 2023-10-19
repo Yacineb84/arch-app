@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
@@ -19,6 +20,7 @@ import lombok.ToString.Exclude;
 @Table(name = "user")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,17 +48,5 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",orphanRemoval = true)
     @Exclude
     private Cv cv;
-
-	public User(String name, String firstName, String email, String site, String dateOfBirth, String password) {
-		super();
-		this.name = name;
-		this.firstName = firstName;
-		this.email = email;
-		this.site = site;
-		this.dateOfBirth = dateOfBirth;
-		this.password = password;
-	}
-
-    
 
 }
