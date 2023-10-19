@@ -49,4 +49,14 @@ public class User {
     @Exclude
     private Cv cv;
 
+	public User(String name, String firstName, String email, String site, String dateOfBirth, String password) {
+		super();
+		this.name = name;
+		this.firstName = firstName;
+		this.email = email;
+		this.site = site;
+		this.dateOfBirth = dateOfBirth;
+		this.password = password;
+	}
+
 }

@@ -27,6 +27,7 @@ import lombok.ToString.Exclude;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cv {
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
