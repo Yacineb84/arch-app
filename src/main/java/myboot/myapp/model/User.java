@@ -23,17 +23,13 @@ import lombok.ToString.Exclude;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String email;
     
     @Basic
     private String name;
     
     @Basic
     private String firstName;
-    
-    @Basic
-    private String email;
     
     @Basic
     private String site;
@@ -49,7 +45,7 @@ public class User {
     @Exclude
     private Cv cv;
 
-	public User(String name, String firstName, String email, String site, String dateOfBirth, String password) {
+	public User(String email, String name, String firstName, String site, String dateOfBirth, String password) {
 		super();
 		this.name = name;
 		this.firstName = firstName;
