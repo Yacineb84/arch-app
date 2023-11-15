@@ -19,28 +19,28 @@ public class TestUserRepository {
 	
 	@Test
 	public void createAndRead() {
-		var u = r.save(new User("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
-		var u2 = r.findById(u.getId());
-		assertEquals(u2.get().getName(), "Yacine");
+		var u = r.save(new User("yac@gmail.com","Boukhari","Yacine","mon site", "18/01/1998", "mdp"));
+		var u2 = r.findById(u.getEmail());
+		assertEquals(u2.get().getName(), "Boukhari");
 	}
 	
 	@Test
 	public void delete() {
-		User u = new User("Anis","Busse","anis@gmail.com","mon site", "18/08/1998", "mdp");
+		User u = new User("anis@gmail.com","Busse","Anis","mon site", "18/08/1998", "mdp");
 		r.save(u);
 		r.delete(u);
-		var u2 = r.findById(u.getId());
+		var u2 = r.findById(u.getEmail());
 		assertEquals(u2.isEmpty(), true);
 	}
 	
 	@Test
 	public void update() {
-		User user = r.save(new User("Yacine","Boukhari","yac@gmail.com","mon site", "18/01/1998", "mdp"));
-		Optional<User> u = r.findById(user.getId());
-		assertEquals(u.get().getName(), "Yacine");
+		User user = r.save(new User("yac@gmail.com","Boukhari","Yacine","mon site", "18/01/1998", "mdp"));
+		Optional<User> u = r.findById(user.getEmail());
+		assertEquals(u.get().getName(), "Boukhari");
 		u.get().setName("Chong");
 		r.save(u.get());
-		Optional<User> new_u = r.findById(user.getId());
+		Optional<User> new_u = r.findById(user.getEmail());
 		assertEquals(new_u.get().getName(), "Chong");
 	}
 

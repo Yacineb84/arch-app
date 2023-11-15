@@ -22,7 +22,7 @@ import lombok.ToString.Exclude;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    @Id
+	@Id
     private String email;
     
     @Basic

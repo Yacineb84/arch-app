@@ -15,5 +15,5 @@ import myboot.myapp.model.User;
 public interface UserRepository extends CrudRepository<User, String> {
 	User findByName(String name);
 	
-	User findByMail(String mail);
+	User findByEmail(String email);
 }
