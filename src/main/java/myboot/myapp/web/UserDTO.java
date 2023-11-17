@@ -10,12 +10,12 @@ import myboot.myapp.model.Cv;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+	
+	private String email;
     
     private String name;
     
     private String firstName;
-    
-    private String email;
     
     private String site;
     
