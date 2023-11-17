@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -23,6 +24,7 @@ import lombok.ToString.Exclude;
 @AllArgsConstructor
 public class User {
 	@Id
+	@NotBlank(message = "{user.email}")
     private String email;
     
     @Basic
