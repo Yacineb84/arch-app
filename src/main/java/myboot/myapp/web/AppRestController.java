@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.experimental.var;
+import myboot.myapp.model.Activity;
 import myboot.myapp.model.User;
 
 
@@ -54,6 +55,16 @@ public class AppRestController {
 			appService.addUser(user1);
 			appService.addUser(user2);
 			appService.addUser(user3);
+			
+		}
+		
+		if (appService.activityRepository.count() == 0) {
+			Activity activity1 = new Activity(2023,"Stage","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
+			Activity activity2 = new Activity(2022,"Projet","Catalogue d'animé","Projet de génie logiciel","mrAnime.com");
+			Activity activity3 = new Activity(2020,"Formation","React","Formation de 1mois sur le framework React","react.com");
+			appService.addActivity(activity1);
+			appService.addActivity(activity2);
+			appService.addActivity(activity3);
 		}
 	}
 
@@ -112,13 +123,77 @@ public class AppRestController {
 	}
 	
 	@PatchMapping("/users")
-	public void patchMovies() {
+	public void patchUser() {
 		User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
 		User user2 = new User("anis@gmail.com","Boussedra","Anis","Mon site Anis","25/08/1997","anis");
 		User user3 = new User("fong@gmail.com","Fong","Cheko","Mon fongus","03/12/1995","fong");
 		appService.addUser(user1);
 		appService.addUser(user2);
 		appService.addUser(user3);
+	}
+	
+	/////////////////////////////////////////////
+	
+	@GetMapping("/activity")
+	public List<ActivityDTO> getActivities() {
+		var a = appService.getAllActivities();
+
+		List<ActivityDTO> activities = modelMapper.map(a, new TypeToken<List<ActivityDTO>>() {
+		}.getType());
+		
+		System.out.println(activities);
+		return activities;
+	}
+	
+	@GetMapping("/activity/{id}")
+	public ActivityDTO getActivity(@PathVariable Long id) {
+		var a = appService.getActivity(id);
+		ActivityDTO activity = modelMapper.map(a, ActivityDTO.class);
+		return activity;
+	
+	}
+	
+	@DeleteMapping("/activity/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	void deleteActivity(@PathVariable Long id) {
+		appService.deleteActivity(id);
+	}
+	
+	@PostMapping("/activity")
+	public Activity postActivity(@RequestBody @Valid Activity a) {
+		return appService.addActivity(a);
+	}
+	
+	@PutMapping("/activity/{id}")
+	public Map<String,String> putActivity(@RequestBody Activity a, @PathVariable Long id) {
+		Set<ConstraintViolation<Activity>> errors = validationFactory.getValidator().validate(a);
+		Map<String, String> map = new HashMap<String, String>();
+		Activity activity = appService.getActivity(id);
+		
+		for(ConstraintViolation<Activity> c : errors) {
+			System.out.println(c.getPropertyPath().toString());
+			System.out.println(c.getMessage());
+			map.put(c.getPropertyPath().toString(), c.getMessage());
+		}
+		if (errors.size() == 0) {
+			activity.setDescription(a.getDescription());
+			activity.setNature(a.getNature());
+			activity.setTitle(a.getTitle());
+			activity.setWebAddress(a.getWebAddress());
+			activity.setYear(a.getYear());
+			appService.addActivity(activity);
+		} 
+		return map;
+	}
+	
+	@PatchMapping("/activity")
+	public void patchActivities() {
+		Activity activity1 = new Activity(2023,"Stage","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
+		Activity activity2 = new Activity(2022,"Projet","Catalogue d'animé","Projet de génie logiciel","mrAnime.com");
+		Activity activity3 = new Activity(2020,"Formation","React","Formation de 1mois sur le framework React","react.com");
+		appService.addActivity(activity1);
+		appService.addActivity(activity2);
+		appService.addActivity(activity3);
 	}
 
 }

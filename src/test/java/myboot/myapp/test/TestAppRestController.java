@@ -1,11 +1,14 @@
 package myboot.myapp.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -16,14 +19,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.experimental.var;
 import myboot.myapp.dao.ActivityRepository;
 import myboot.myapp.dao.CvRepository;
 import myboot.myapp.dao.UserRepository;
+import myboot.myapp.model.Activity;
 import myboot.myapp.model.User;
+import myboot.myapp.web.ActivityDTO;
+import myboot.myapp.web.AppService;
 import myboot.myapp.web.UserDTO;
 
 @SpringBootTest
 public class TestAppRestController {
+	@Autowired
+	private AppService appService;
+	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -32,6 +42,8 @@ public class TestAppRestController {
 	
 	@Autowired
 	CvRepository cvRepository;
+	
+	private ModelMapper modelMapper = new ModelMapper();
 	
 	@Test
 	public void testGetUsers() {
@@ -132,4 +144,114 @@ public class TestAppRestController {
 			restTemplate.put(url , user, User.class);
 		});
 	}
+	
+	/////////////////////////////////////////////
+	
+	@Test
+	public void testGetActivities() {
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8081/api/activity";
+		ActivityDTO res = new ActivityDTO(2023,"Stage","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
+		ResponseEntity<ActivityDTO[]> response
+		  = restTemplate.getForEntity(url , ActivityDTO[].class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		Assertions.assertEquals(response.getBody()[0],res);
+
+	}
+	
+	@Test
+	public void testGetActivity() {
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/activity/1";
+		ResponseEntity<ActivityDTO> response
+		  = restTemplate.getForEntity(url , ActivityDTO.class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		Assertions.assertTrue(response.getBody().toString().contains("Stage"));	
+	}
+	
+	@Test
+	public void testBadGetActivity() {
+		RestTemplate restTemplate = new RestTemplate();
+		assertThrows(HttpClientErrorException.class, () -> {
+			ResponseEntity<ActivityDTO> response =
+				  restTemplate.getForEntity(
+				  "http://localhost:8081/api/activity/5",
+				  ActivityDTO.class);
+		});
+	}
+	
+	
+	@Test
+	public void testDeleteActivity() {
+		HttpHeaders headers = new HttpHeaders();
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/activity/3";
+		HttpEntity entity = new HttpEntity(headers);
+		ResponseEntity response = restTemplate.exchange(url, HttpMethod.DELETE,entity,Object.class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);	
+	}
+	
+	@Test
+	public void testAddActivity() {
+		Activity activity = new Activity(2019,"Stage","Developpeur React","Stage de 2 mois chez Sopra","sopra.com");
+		
+		ActivityDTO activityDto = modelMapper.map(activity, ActivityDTO.class);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/activity";
+		ResponseEntity<Activity> response
+		  = restTemplate.postForEntity(url , activity, Activity.class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		
+		ActivityDTO res = modelMapper.map(response.getBody(), ActivityDTO.class);
+		
+		System.out.println("REPONSE ======== " + res);
+		System.out.println("ACTIVITY ======= " + activityDto);
+		Assertions.assertEquals(res, activityDto);	
+	}
+	
+	@Test
+	public void testAddBadActivity() {
+		Activity activity = new Activity(2023,"","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:8081/api/activity";
+		
+		assertThrows(HttpClientErrorException.class, ()-> {
+			ResponseEntity<Activity> response
+			= restTemplate.postForEntity(url , activity, Activity.class);
+		});
+	}
+	
+	@Test
+	public void testPutActivity() {
+		Activity activity = new Activity(2023,"Stage","Developpeur Web","Stage de 5 mois chez Capgemini","capge.com");
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/activity/1";
+		HttpEntity entity = new HttpEntity(activity);
+		ResponseEntity<Activity> response = restTemplate.exchange(url, HttpMethod.PUT,entity,Activity.class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		
+		
+		ResponseEntity<ActivityDTO> response2
+		  = restTemplate.getForEntity("http://localhost:8081/api/activity/1" , ActivityDTO.class);
+		Assertions.assertEquals(response2.getBody().getDescription(), "Stage de 5 mois chez Capgemini");
+	
+	
+	}
+	
+	@Test
+	public void testPutBadActivity() {
+		Activity activity = new Activity(2023,"Stage","Developpeur Web","Stage de 5 mois chez Capgemini","capge.com");
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/activity/8";
+		assertThrows(HttpClientErrorException.class, ()-> {
+			restTemplate.put(url , activity, Activity.class);
+		});
+	}
+
 }

@@ -49,14 +49,6 @@ public class AppService {
 		return userRepository.findById(email).orElseThrow(() -> new NotFoundException());
 	}
 	
-	public void addActivity(Cv cv, Activity activity) {
-		activityRepository.save(activity);
-		var a = cv.getActivities();
-		a.add(activity);
-		cv.setActivities(a);
-		cvRepository.save(cv);
-	}
-	
 	public List<User> getAllUser(){
 		return (List<User>) userRepository.findAll();
 	}
@@ -64,5 +56,38 @@ public class AppService {
 	public List<User> getUsersLike(String name){
 		return (List<User>) userRepository.findByNameLike(name);
 	}
+	
+	/////////////////////////////////////////////
+	
+	public void addActivityToCv(Cv cv, Activity activity) {
+		activityRepository.save(activity);
+		var a = cv.getActivities();
+		a.add(activity);
+		cv.setActivities(a);
+		cvRepository.save(cv);
+	}
+	
+	/////////////////////////////////////////////
+	
+	public Activity getActivity(Long id) {
+		return activityRepository.findById(id).orElseThrow(() -> new NotFoundException());
+	}
+	
+	public List<Activity> getAllActivities(){
+		List<Activity> activities = (List<Activity>) activityRepository.findAll();
+		System.out.println("LES ACTIVITES ==== " + activities);
+		return (List<Activity>) activityRepository.findAll();
+	}
+	
+	public Activity addActivity(Activity activity) {
+		return activityRepository.save(activity);
+	}
+	
+	public void deleteActivity(Long id) {
+		activityRepository.deleteById(id);
+	}
+	
+	/////////////////////////////////////////////
+
 	
 }
