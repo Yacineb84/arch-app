@@ -18,6 +18,6 @@ public interface UserRepository extends CrudRepository<User, String> {
 	
 	User findByEmail(String email);
 	
-	@Query("select u from User u where (u.name like :name)")
-	Iterable<User> findByNameLike(String name);
+	@Query("select u from User u where (u.name like %:search%) or (u.firstName like %:search%)")
+	Iterable<User> findByNameLike(String search);
 }

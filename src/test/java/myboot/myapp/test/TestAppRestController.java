@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.DrbgParameters.NextBytes;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -24,9 +26,11 @@ import myboot.myapp.dao.ActivityRepository;
 import myboot.myapp.dao.CvRepository;
 import myboot.myapp.dao.UserRepository;
 import myboot.myapp.model.Activity;
+import myboot.myapp.model.Cv;
 import myboot.myapp.model.User;
 import myboot.myapp.web.ActivityDTO;
 import myboot.myapp.web.AppService;
+import myboot.myapp.web.CvDTO;
 import myboot.myapp.web.UserDTO;
 
 @SpringBootTest
@@ -66,6 +70,18 @@ public class TestAppRestController {
 		  = restTemplate.getForEntity(url , UserDTO.class);
 		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 		Assertions.assertTrue(response.getBody().toString().contains("Boukhari"));	
+	}
+	
+	
+	@Test
+	public void testGetUserLike() {
+		RestTemplate restTemplate = new RestTemplate();
+		String url
+		  = "http://localhost:8081/api/users?search=Boukhari";
+		ResponseEntity<UserDTO[]> response
+		  = restTemplate.getForEntity(url , UserDTO[].class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		Assertions.assertTrue(response.getBody()[0].toString().contains("Boukhari"));	
 	}
 	
 	@Test
@@ -207,9 +223,6 @@ public class TestAppRestController {
 		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 		
 		ActivityDTO res = modelMapper.map(response.getBody(), ActivityDTO.class);
-		
-		System.out.println("REPONSE ======== " + res);
-		System.out.println("ACTIVITY ======= " + activityDto);
 		Assertions.assertEquals(res, activityDto);	
 	}
 	
@@ -252,6 +265,51 @@ public class TestAppRestController {
 		assertThrows(HttpClientErrorException.class, ()-> {
 			restTemplate.put(url , activity, Activity.class);
 		});
+	}
+	
+	/////////////////////////////////////////////
+		
+	@Test
+	public void testAddActivityToCv() {
+		RestTemplate restTemplate = new RestTemplate();
+		User user = new User("mehdi@gmail.com","Saidi","Mehdi","monSite","12/03/2008","mdp",null);
+		Activity activity = new Activity(2023,"Développeur en entreprise","Developpeur Web Angular","3 ans chez CapgeMini","capge.com");
+	
+		restTemplate.postForEntity("http://localhost:8081/api/users" , user, User.class);
+
+		restTemplate.postForEntity("http://localhost:8081/api/activity" , activity, Activity.class);
+
+		Cv cv = new Cv(null,user);
+		
+		user.setCv(cv);
+		System.out.println(user.getCv());
+		restTemplate.postForEntity("http://localhost:8081/api/cv" , cv, Cv.class);
+		
+		appService.addUser(user);
+		
+ 		//restTemplate.postForEntity("http://localhost:8081/api/users" , user, User.class);
+
+		System.out.println("print icicicicicici");
+		
+		String url = "http://localhost:8081/api/cv/1/activity";
+		
+		Cv cv2 = appService.getCv((long)1);
+		
+		System.out.println(cv2);
+		
+		CvDTO res = modelMapper.map(cv2, CvDTO.class);
+		
+		System.out.println("JE VIENS ICI" + res);
+		System.out.println(cv.getId());
+		System.out.println(activity);
+		
+		
+		ResponseEntity<CvDTO[]> response
+		= restTemplate.postForEntity(url , activity, CvDTO[].class);
+		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		System.out.println("ICI ==== " + response.getBody());
+		Assertions.assertEquals(response.getBody()[0],res);
+		
 	}
 
 }

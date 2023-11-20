@@ -25,11 +25,15 @@ public class AppService {
 	@Autowired
 	CvRepository cvRepository;
 	
-	public void addCv(Cv cv) {
-		cvRepository.save(cv);
+	public Cv addCv(Cv cv) {
+		return cvRepository.save(cv);
 	}
 	
-	public Cv getCv(User user) {
+	public Cv getCv(Long id) {
+		return cvRepository.findById(id).orElseThrow(() -> new NotFoundException());
+	}
+	
+	public Cv getCvByUser(User user) {
 		return cvRepository.findByUser(user);
 	}
 	
@@ -53,8 +57,8 @@ public class AppService {
 		return (List<User>) userRepository.findAll();
 	}
 	
-	public List<User> getUsersLike(String name){
-		return (List<User>) userRepository.findByNameLike(name);
+	public List<User> getUsersLike(String search){
+		return (List<User>) userRepository.findByNameLike(search);
 	}
 	
 	/////////////////////////////////////////////
@@ -65,6 +69,26 @@ public class AppService {
 		a.add(activity);
 		cv.setActivities(a);
 		cvRepository.save(cv);
+	}
+		
+	public void removeActivityToCv(Cv cv, Activity activity) {
+		var activities = cv.getActivities();
+		activities.remove(activity);
+		cv.setActivities(activities);
+		activityRepository.delete(activity);
+		cvRepository.save(cv);
+	}
+	
+	public void addCvToUser(Cv cv, User user) {
+		cvRepository.save(cv);
+		user.setCv(cv);
+		userRepository.save(user);
+	}
+	
+	public void removeCvToUser(Cv cv, User user) {
+		user.setCv(null);
+		userRepository.save(user);
+		cvRepository.delete(cv);
 	}
 	
 	/////////////////////////////////////////////

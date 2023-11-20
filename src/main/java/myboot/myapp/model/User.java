@@ -1,6 +1,7 @@
 package myboot.myapp.model;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,7 +44,7 @@ public class User {
     private String password;
     
     @JsonManagedReference
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user",orphanRemoval = true,cascade = CascadeType.ALL)
     @Exclude
     private Cv cv;
 

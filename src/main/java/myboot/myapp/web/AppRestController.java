@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.experimental.var;
 import myboot.myapp.model.Activity;
+import myboot.myapp.model.Cv;
 import myboot.myapp.model.User;
 
 
@@ -73,8 +74,8 @@ public class AppRestController {
 	}
 	
 	@GetMapping("/users")
-	public List<UserDTO> getUsers(@RequestParam(required = false, defaultValue = "%") String name) {
-		var u = appService.getUsersLike(name);
+	public List<UserDTO> getUsers(@RequestParam(required = false, defaultValue = "%") String search) {
+		var u = appService.getUsersLike(search);
 
 		List<UserDTO> users = modelMapper.map(u, new TypeToken<List<UserDTO>>() {
 		}.getType());
@@ -130,6 +131,31 @@ public class AppRestController {
 		appService.addUser(user1);
 		appService.addUser(user2);
 		appService.addUser(user3);
+	}
+	/////////////////////////////////////////////
+	
+	@PostMapping("/cv")
+	public Cv postCv(@RequestBody @Valid Cv cv) {
+		return appService.addCv(cv);
+	}
+	
+	@PostMapping("/cv/{id}/activity")
+	public CvDTO postActivityToCv(@PathVariable Long id,@RequestBody @Valid Activity activity) {
+		System.out.println("AVANT GET");
+		Cv cv = appService.getCv(id);
+		System.out.println("APRES GET");
+		appService.addActivityToCv(cv, activity);
+		CvDTO cvDTO = modelMapper.map(appService.getCv(id), CvDTO.class);
+		return cvDTO;
+	}
+	
+	@PostMapping("/cv/{idC}/user/{email}")
+	public UserDTO postCvToUser(@PathVariable Long idC, @PathVariable String email) {
+		var user = appService.getUser(email);
+		var cv = appService.getCv(idC);
+		appService.addCvToUser(cv, user);
+		UserDTO userDTO = modelMapper.map(appService.getUser(email), UserDTO.class);
+		return userDTO;
 	}
 	
 	/////////////////////////////////////////////
