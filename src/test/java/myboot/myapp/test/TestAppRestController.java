@@ -192,7 +192,7 @@ public class TestAppRestController {
 		assertThrows(HttpClientErrorException.class, () -> {
 			ResponseEntity<ActivityDTO> response =
 				  restTemplate.getForEntity(
-				  "http://localhost:8081/api/activity/5",
+				  "http://localhost:8081/api/activity/50",
 				  ActivityDTO.class);
 		});
 	}
@@ -269,46 +269,35 @@ public class TestAppRestController {
 	
 	/////////////////////////////////////////////
 		
+	
 	@Test
-	public void testAddActivityToCv() {
+	public void testAddActivityToCvAndAddCvToUser() {
 		RestTemplate restTemplate = new RestTemplate();
+		
 		User user = new User("mehdi@gmail.com","Saidi","Mehdi","monSite","12/03/2008","mdp",null);
 		Activity activity = new Activity(2023,"Développeur en entreprise","Developpeur Web Angular","3 ans chez CapgeMini","capge.com");
 	
 		restTemplate.postForEntity("http://localhost:8081/api/users" , user, User.class);
-
 		restTemplate.postForEntity("http://localhost:8081/api/activity" , activity, Activity.class);
 
+		String url2 = "http://localhost:8081/api/cv/1/user/mehdi@gmail.com";
+		
 		Cv cv = new Cv(null,user);
 		
-		user.setCv(cv);
-		System.out.println(user.getCv());
 		restTemplate.postForEntity("http://localhost:8081/api/cv" , cv, Cv.class);
 		
-		appService.addUser(user);
-		
- 		//restTemplate.postForEntity("http://localhost:8081/api/users" , user, User.class);
-
-		System.out.println("print icicicicicici");
 		
 		String url = "http://localhost:8081/api/cv/1/activity";
 		
-		Cv cv2 = appService.getCv((long)1);
-		
-		System.out.println(cv2);
-		
-		CvDTO res = modelMapper.map(cv2, CvDTO.class);
-		
-		System.out.println("JE VIENS ICI" + res);
-		System.out.println(cv.getId());
-		System.out.println(activity);
-		
-		
-		ResponseEntity<CvDTO[]> response
-		= restTemplate.postForEntity(url , activity, CvDTO[].class);
+		ResponseEntity<CvDTO> response
+		= restTemplate.postForEntity(url , activity, CvDTO.class);
 		Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
-		System.out.println("ICI ==== " + response.getBody());
-		Assertions.assertEquals(response.getBody()[0],res);
+		Assertions.assertEquals(response.getBody().getActivities().get(0).getNature(),activity.getNature());
+		
+		ResponseEntity<UserDTO> response2
+		= restTemplate.postForEntity(url2 ,null,UserDTO.class);
+		Assertions.assertEquals(response2.getStatusCode(), HttpStatus.OK);
+		Assertions.assertEquals(response2.getBody().getEmail(),user.getEmail());
 		
 	}
 

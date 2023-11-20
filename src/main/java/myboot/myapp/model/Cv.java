@@ -3,6 +3,7 @@ package myboot.myapp.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,8 +34,7 @@ public class Cv {
     private Long id;
 	
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cv")
-    @Exclude
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cv",cascade = CascadeType.MERGE )
     private List<Activity> activities = new LinkedList<>();
     
     @JsonBackReference

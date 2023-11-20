@@ -53,7 +53,7 @@ public class TestCvRepository {
 		activities.add(activity);
 		activityRepo.save(activity);
 		var cv = cvRepo.save(new Cv(activities,u));
-		cvRepo.delete(cv);
+		cvRepo.deleteById(cv.getId());
 		var cv2 = cvRepo.findById(cv.getId());
 		assertEquals(cv2.isEmpty(), true);
 		var u2 = userRepo.findById(u.getEmail());

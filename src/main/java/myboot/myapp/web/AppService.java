@@ -37,8 +37,8 @@ public class AppService {
 		return cvRepository.findByUser(user);
 	}
 	
-	public void deleteCv(Cv cv) {
-		cvRepository.delete(cv);
+	public void deleteCv(Long id) {
+		cvRepository.deleteById(id);
 	}
 	
 	public User addUser(User user) {
@@ -68,6 +68,7 @@ public class AppService {
 		var a = cv.getActivities();
 		a.add(activity);
 		cv.setActivities(a);
+		System.out.println("LE CV ::::::::::::: " + cv);
 		cvRepository.save(cv);
 	}
 		

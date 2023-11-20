@@ -149,13 +149,19 @@ public class AppRestController {
 		return cvDTO;
 	}
 	
-	@PostMapping("/cv/{idC}/user/{email}")
-	public UserDTO postCvToUser(@PathVariable Long idC, @PathVariable String email) {
+	@PostMapping("/cv/{id}/user/{email}")
+	public UserDTO postCvToUser(@PathVariable Long id, @PathVariable String email) {
 		var user = appService.getUser(email);
-		var cv = appService.getCv(idC);
+		var cv = appService.getCv(id);
 		appService.addCvToUser(cv, user);
 		UserDTO userDTO = modelMapper.map(appService.getUser(email), UserDTO.class);
 		return userDTO;
+	}
+	
+	@DeleteMapping("/cv/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	void deleteCv(@PathVariable Long id) {
+		appService.deleteCv(id);
 	}
 	
 	/////////////////////////////////////////////
