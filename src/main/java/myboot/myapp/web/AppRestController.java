@@ -1,20 +1,24 @@
 package myboot.myapp.web;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springdoc.core.converters.models.MonetaryAmount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,14 +36,19 @@ import lombok.experimental.var;
 import myboot.myapp.model.Activity;
 import myboot.myapp.model.Cv;
 import myboot.myapp.model.User;
+import myboot.myapp.security.UserService;
 
 
 @RestController
 @RequestMapping("/api")
+@Profile("usejwt")
 public class AppRestController {
 	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	LocalValidatorFactoryBean validationFactory;
@@ -50,14 +59,24 @@ public class AppRestController {
 	public void init() {
 		System.out.println("Start " + this);
 		if (appService.userRepository.count() == 0) {
-			User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
-			User user2 = new User("anis@gmail.com","Boussedra","Anis","Mon site Anis","25/08/1997","anis");
-			User user3 = new User("fong@gmail.com","Fong","Cheko","Mon fongus","03/12/1995","fong");
-			appService.addUser(user1);
-			appService.addUser(user2);
-			appService.addUser(user3);
+
+//			User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
+//			User user2 = new User("anis@gmail.com","Boussedra","Anis","Mon site Anis","25/08/1997","anis");
+//			User user3 = new User("fong@gmail.com","Fong","Cheko","Mon fongus","03/12/1995","fong");
+//			userService.signup(user1);
+//			userService.signup(user2);
+//			userService.signup(user3);
 			
 		}
+//		User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
+//		userService.signup(user1);
+		User user = new User("bilal@gmail.com","Saidi","Bilal","hypoman","10/01/2010","mdp",null);
+		Activity activity = new Activity(2023,"Développeur en entreprise","Developpeur Web Angular","3 ans chez CapgeMini","capge.com");
+		Cv cv = new Cv(new LinkedList<Activity>(),null);
+		
+		Cv cv2 = appService.addActivityToCv(cv, activity);
+		
+		User user2 = appService.addCvToUser(cv2, user);
 		
 		if (appService.activityRepository.count() == 0) {
 			Activity activity1 = new Activity(2023,"Stage","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
@@ -67,6 +86,7 @@ public class AppRestController {
 			appService.addActivity(activity2);
 			appService.addActivity(activity3);
 		}
+		
 	}
 
 	@PreDestroy
@@ -85,6 +105,8 @@ public class AppRestController {
 	@GetMapping("/users/{email}")
 	public UserDTO getUser(@PathVariable String email) {
 		var u = appService.getUser(email);
+		System.out.println(u);
+		System.out.println(u.getCv());
 		UserDTO user = modelMapper.map(u, UserDTO.class);
 		return user;
 	
@@ -116,8 +138,10 @@ public class AppRestController {
 			user.setName(u.getName());
 			user.setFirstName(u.getFirstName());
 			user.setSite(u.getSite());
-			user.setCv(u.getCv());
-			user.setPassword(u.getPassword());
+			//user.setCv(u.getCv());
+			user.setDateOfBirth(u.getDateOfBirth());
+			if (u.getPassword() != null)user.setPassword(u.getPassword());
+			
 			appService.addUser(user);
 		} 
 		return map;
@@ -167,14 +191,15 @@ public class AppRestController {
 	/////////////////////////////////////////////
 	
 	@GetMapping("/activity")
-	public List<ActivityDTO> getActivities() {
-		var a = appService.getAllActivities();
-
-		List<ActivityDTO> activities = modelMapper.map(a, new TypeToken<List<ActivityDTO>>() {
+	public List<UserDTO> getActivities(@RequestParam(required = false, defaultValue = "%") String search) {
+		var a = appService.getActivitiesLike(search);
+		List<User> users = new LinkedList<User>();
+		for (Activity activity : a) {
+			users.add(activity.getCv().getUser());
+		}
+		System.err.println(users);
+		return modelMapper.map(users, new TypeToken<List<UserDTO>>() {
 		}.getType());
-		
-		System.out.println(activities);
-		return activities;
 	}
 	
 	@GetMapping("/activity/{id}")
@@ -188,7 +213,10 @@ public class AppRestController {
 	@DeleteMapping("/activity/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	void deleteActivity(@PathVariable Long id) {
-		appService.deleteActivity(id);
+		var a = appService.getActivity(id);
+		var c = appService.getCv(a.getCv().getId());
+		System.err.println("LE CV DANS DELETE : " + c);
+		appService.removeActivityToCv(c, a);
 	}
 	
 	@PostMapping("/activity")
@@ -226,6 +254,69 @@ public class AppRestController {
 		appService.addActivity(activity1);
 		appService.addActivity(activity2);
 		appService.addActivity(activity3);
+	}
+	
+	/////////////////////////////////////////////
+
+	/**
+	 * Authentification et récupération d'un JWT
+	 */
+	@PostMapping("/login")
+	public String login(//
+			@RequestParam String email, //
+			@RequestParam String password) {
+		System.out.println("Je fais login");
+		return userService.login(email, password);
+	}
+
+	/**
+	 * Ajouter un utilisateur
+	 */
+	@PostMapping("/signup")
+	public String signup(@RequestBody User user) {
+		return userService.signup(user);
+	}
+
+	/**
+	 * Supprimer un utilisateur
+	 */
+	@DeleteMapping("/{username}")
+	public String delete(@PathVariable String email) {
+		System.out.println("delete " + email);
+		userService.delete(email);
+		return email;
+	}
+
+	/**
+	 * Récupérer des informations sur un utilisateur
+	 */
+	@GetMapping("/{email}")
+	public UserDTO search(@PathVariable String email) {
+		return modelMapper.map(userService.search(email), UserDTO.class);
+	}
+
+	/**
+	 * Récupérer des informations sur l'utilisateur courant
+	 */
+	@GetMapping(value = "/me")
+	public UserDTO whoami(HttpServletRequest req) {
+		return modelMapper.map(userService.whoami(req), UserDTO.class);
+	}
+
+	/**
+	 * Récupérer un nouveau JWT
+	 */
+	@GetMapping("/refresh")
+	public String refresh(HttpServletRequest req) {
+		return userService.refresh(req.getRemoteUser());
+	}
+	
+	/**
+	 * Oublie d'un JWT
+	 */
+	@GetMapping("/logout")
+	public List<String> logout(HttpServletRequest req) {
+		return userService.logout(req);
 	}
 
 }

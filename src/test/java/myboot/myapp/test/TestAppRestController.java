@@ -274,13 +274,13 @@ public class TestAppRestController {
 	public void testAddActivityToCvAndAddCvToUser() {
 		RestTemplate restTemplate = new RestTemplate();
 		
-		User user = new User("mehdi@gmail.com","Saidi","Mehdi","monSite","12/03/2008","mdp",null);
+		User user = new User("bilal@gmail.com","Saidi","bilal","monSite","12/03/2008","mdp",null);
 		Activity activity = new Activity(2023,"Développeur en entreprise","Developpeur Web Angular","3 ans chez CapgeMini","capge.com");
 	
 		restTemplate.postForEntity("http://localhost:8081/api/users" , user, User.class);
 		restTemplate.postForEntity("http://localhost:8081/api/activity" , activity, Activity.class);
 
-		String url2 = "http://localhost:8081/api/cv/1/user/mehdi@gmail.com";
+		String url2 = "http://localhost:8081/api/cv/1/user/bilal@gmail.com";
 		
 		Cv cv = new Cv(null,user);
 		

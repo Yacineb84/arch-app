@@ -42,7 +42,18 @@ public class AppService {
 	}
 	
 	public User addUser(User user) {
-		return userRepository.save(user);
+		System.err.println("Je suis pas encore rentré dans le if");
+		if (userRepository.findByEmail(user.getEmail()) == null) {
+			System.err.println("Je suis rentré dans le if");
+			user = new User(user.getEmail(),user.getName(),user.getFirstName(),user.getSite(),user.getDateOfBirth(),user.getPassword());
+			System.out.println("Je suis la");
+		}
+		var u = userRepository.save(user);
+		System.out.println("LES USERS QUE JE ADD" + u);
+		Cv cv = cvRepository.save(user.getCv());
+		System.out.println("et leur cv " + u.getCv());
+		System.err.println("ou ici " + cv);
+		return user;
 	}
 	
 	public void deleteUser(String email) {
@@ -58,32 +69,36 @@ public class AppService {
 	}
 	
 	public List<User> getUsersLike(String search){
+		search = search.toUpperCase();
 		return (List<User>) userRepository.findByNameLike(search);
 	}
 	
 	/////////////////////////////////////////////
 	
-	public void addActivityToCv(Cv cv, Activity activity) {
+	public Cv addActivityToCv(Cv cv, Activity activity) {
 		activityRepository.save(activity);
-		var a = cv.getActivities();
-		a.add(activity);
-		cv.setActivities(a);
-		System.out.println("LE CV ::::::::::::: " + cv);
-		cvRepository.save(cv);
+		activity.setCv(cv);
+		Activity a = activityRepository.save(activity);
+		var c = cvRepository.findById(a.getCv().getId()).get();
+		return c;
 	}
 		
 	public void removeActivityToCv(Cv cv, Activity activity) {
 		var activities = cv.getActivities();
-		activities.remove(activity);
-		cv.setActivities(activities);
-		activityRepository.delete(activity);
-		cvRepository.save(cv);
+//		activities.remove(activity);
+//		cv.setActivities(activities);
+		activity.setCv(null);
+		activityRepository.save(activity);
+//		activityRepository.delete(activity);
+		cv = cvRepository.save(cv);
 	}
 	
-	public void addCvToUser(Cv cv, User user) {
+	public User addCvToUser(Cv cv, User user) {
+		user = userRepository.save(user);
+		cv.setUser(user);
 		cvRepository.save(cv);
-		user.setCv(cv);
-		userRepository.save(user);
+		User user2 = userRepository.findByEmail(user.getEmail());
+		return user2;
 	}
 	
 	public void removeCvToUser(Cv cv, User user) {
@@ -102,6 +117,11 @@ public class AppService {
 		List<Activity> activities = (List<Activity>) activityRepository.findAll();
 		System.out.println("LES ACTIVITES ==== " + activities);
 		return (List<Activity>) activityRepository.findAll();
+	}
+	
+	public List<Activity> getActivitiesLike(String search){
+		search = search.toUpperCase();
+		return (List<Activity>) activityRepository.findByNameLike(search);
 	}
 	
 	public Activity addActivity(Activity activity) {

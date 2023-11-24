@@ -34,7 +34,7 @@ public class Cv {
     private Long id;
 	
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cv",cascade = CascadeType.MERGE )
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cv",cascade = CascadeType.ALL )
     private List<Activity> activities = new LinkedList<>();
     
     @JsonBackReference

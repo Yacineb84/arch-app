@@ -1,7 +1,14 @@
 package myboot.myapp.model;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -56,6 +63,7 @@ public class User {
 		this.site = site;
 		this.dateOfBirth = dateOfBirth;
 		this.password = password;
+		this.cv = new Cv(new LinkedList<Activity>(), this);
 	}
 
 }
