@@ -16,7 +16,7 @@
       href="#"
       v-if="isLogin"
       v-on:click="setAddPersonne()"
-      >Creer un utilisateur</a
+      >Créer un utilisateur</a
     >
     <a class="navbar-brand" href="#" v-on:click="listPersonnes()"
       >Liste des personnes</a
@@ -32,14 +32,14 @@
           type="text"
           id="searchbar_person"
           name="person"
-          placeholder="Recherche par nom ou prenom.."
+          placeholder="Recherche par nom ou prénom.."
         />
         <input
           class="inp_ricerca"
           type="text"
           id="searchbar_activity"
           name="activity"
-          placeholder="Recherche par activite.."
+          placeholder="Recherche par activité.."
         />
 
         <button class="btn btn-secondary btn-sm" v-on:click="search_person()">
@@ -61,7 +61,7 @@
         v-if="isLogin"
         v-on:click="logout()"
       >
-        Se deconnecter
+        Se déconnecter
       </button>
     </div>
   </nav>
@@ -127,7 +127,7 @@
 
   <div
     class="container"
-    v-if="(personne == null && log == null && profil == null)"
+    v-if="(personne == null && log == null && profil == null && addPersonne == null)"
   >
     <h1>Liste des personnes</h1>
 	<br/>
@@ -135,7 +135,7 @@
     <table class="table">
       <tr>
         <th>Nom</th>
-        <th>Prï¿½nom</th>
+        <th>Prénom</th>
         <th>Site</th>
         <th>Date de naissance</th>
         <th>Contact</th>
@@ -163,7 +163,7 @@
     <table class="table" style="align-self: center;align-content: center;align-items: center;margin-top: 5%;">
       <tr>
         <th>Nature</th>
-        <th>Annï¿½e</th>
+        <th>Année</th>
         <th>Titre</th>
         <th>Description</th>
         <th>Adresse web</th>
@@ -308,12 +308,12 @@
 				/>
 				</div>
 				<div class="form-group">
-					<label>AnnÃ©e</label>
+					<label>Année</label>
 					<input
 					type="number"
 					v-model="formCv.year"
 					class="form-control"
-					placeholder="AnnÃ©e"
+					placeholder="Année"
 				/>
 				</div>
 				<div class="form-group">
@@ -348,7 +348,7 @@
       <table class="table" style="align-self: center;align-content: center;align-items: center;">
         <tr>
           <th>Nature</th>
-          <th>Annï¿½e</th>
+          <th>Année</th>
           <th>Titre</th>
           <th>Description</th>
           <th>Adresse web</th>
@@ -376,7 +376,7 @@
 		data-toggle="modal" data-target="#addCV"
 		style="margin-top:5%"
       >
-        Ajouter une activitÃ©
+        Ajouter une activité
       </button>
 
      <!-- <div class="container" v-if="(formCv != null)">
@@ -400,7 +400,7 @@
                   class="form-control"
                   v-bind:class="{'is-invalid':errors.year}"
                   number
-                  placeholder="Annï¿½e"
+                  placeholder="Année"
                 />
                 <div v-if="(errors.year)" class="alert alert-warning">
                   {{ errors.year }}
@@ -465,9 +465,10 @@
     </div>
   </div>
 
-  <!-- Crï¿½ation d'un utilisateur -->
+  <!-- Création d'un utilisateur -->
 
   <div class="container" v-if="(addPersonne != null)">
+  <h1>Créer un utilisateur</h1>
     <form id="app" method="post" novalidate="true">
       <div class="form-group">
         <label>Email :</label>
@@ -493,7 +494,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label>PrÃ©nom :</label>
+        <label>Prénom :</label>
 		<input
 		v-model="addPersonne.firstName"
 		class="form-control"
@@ -508,9 +509,9 @@
       <div class="form-group">
         <label>Date de naissance :</label>
         <input
-		type="date"
           v-model="addPersonne.dateOfBirth"
           class="form-control"
+          placeholder="jj/mm/aaaa"
         ></input>
       </div>
       <div class="form-group">
@@ -526,7 +527,7 @@
           v-on:click.prevent="submitAddPersonne()"
           class="btn btn-primary"
         >
-          Crï¿½er
+          Créer
         </button>
         <button v-on:click="listPersonnes()" class="btn btn-danger" style="margin-right: 0px;margin-left: auto;">
           Annuler

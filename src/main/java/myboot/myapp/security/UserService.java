@@ -57,7 +57,7 @@ public class UserService {
 		}
 		user = new User(user.getEmail(),user.getName(),user.getFirstName(),user.getSite(),user.getDateOfBirth(),user.getPassword());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+//		user.setPassword(user.getPassword());
 		userRepository.save(user);
 		var c = jwtTokenProvider.createToken(user);
 		return c;

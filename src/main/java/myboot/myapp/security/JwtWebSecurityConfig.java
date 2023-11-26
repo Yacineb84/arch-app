@@ -20,7 +20,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import myboot.myapp.dao.UserRepository;
+import myboot.myapp.model.Activity;
+import myboot.myapp.model.Cv;
 import myboot.myapp.model.User;
+import myboot.myapp.web.AppService;
 
 /**
  * Configuration de Spring Security.
@@ -35,21 +38,52 @@ public class JwtWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private JwtProvider jwtTokenProvider;
+	
+	@Autowired
+	private AppService appService;
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	@PostConstruct
 	public void init() {
 		var encoder = passwordEncoder();
-		User user = new User("mehdi@gmail.com","Saidi","Mehdi","Mon site","18/01/1998",encoder.encode("mdp"));
-		User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998",encoder.encode("mdp"));
-		User user2 = new User("anis@gmail.com","Boussedra","Anis","Mon site Anis","25/08/1997",encoder.encode("anis"));
-		User user3 = new User("fong@gmail.com","Fong","Cheko","Mon fongus","03/12/1995",encoder.encode("fong"));
-		User u = userRepo.save(user);
-		u = userRepo.findByEmail(u.getEmail());
-		userRepo.save(user1);
-		userRepo.save(user2);
-		userRepo.save(user3);
+		
+		String[] activity_nature = {"Stage","Expérience_professionnel","Projet","Formation"};
+		
+		String[] activity_title = {"Développement en React","Développement en Angular","Développement en VueJs", "Administration Base de Données",
+				"Sécurité d'une application", "Application web", "Front-end", "Back-end"};
+
+		Activity[] list_activities = new Activity[50];
+		for(int i = 0; i < 50; i++) {
+			
+			int n = (int) (Math.random() * 4);
+			int m = (int) (Math.random() * 8);
+			int year = (int) ((Math.random() * 23) + 2000);
+			String nature = activity_nature[n];
+			String title = activity_title[m];
+			String description = "La description du " + activity_nature[n] + " avec " + activity_title[m] ;
+			String webAddress = "www."+ activity_nature[n] +".fr";
+			list_activities[i] = new Activity(year,nature,title,description,webAddress);
+			
+		}
+		
+		User user = userRepo.save(new User("yac@gmail.com","Boukhari","Yacine","mrAnime.com","18/01/1998",encoder.encode("mdp")));
+		Cv cv_user = user.getCv();
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		appService.addActivityToCv(cv_user, list_activities[(int) (Math.random() * 50)]);
+		
+		appService.addCvToUser(cv_user, user);
+
 		logger.debug("--- INIT SPRING SECURITY JWT");
 	}
 

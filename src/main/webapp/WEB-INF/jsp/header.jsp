@@ -15,7 +15,7 @@
 <html>
 	<head>
 	<meta charset="UTF-8">
-	<title>Spring boot application</title>
+	<title>Gestion de CV</title>
 	<link rel="stylesheet" href="${css}">
 	<link rel="stylesheet" href="${bootstrap_css}">
 	<script src="${jquery_js}"></script>

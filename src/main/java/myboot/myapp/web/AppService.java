@@ -42,18 +42,11 @@ public class AppService {
 	}
 	
 	public User addUser(User user) {
-		System.err.println("Je suis pas encore rentré dans le if");
 		if (userRepository.findByEmail(user.getEmail()) == null) {
-			System.err.println("Je suis rentré dans le if");
 			user = new User(user.getEmail(),user.getName(),user.getFirstName(),user.getSite(),user.getDateOfBirth(),user.getPassword());
-			System.out.println("Je suis la");
 		}
 		var u = userRepository.save(user);
-		System.out.println("LES USERS QUE JE ADD" + u);
-		Cv cv = cvRepository.save(user.getCv());
-		System.out.println("et leur cv " + u.getCv());
-		System.err.println("ou ici " + cv);
-		return user;
+		return u;
 	}
 	
 	public void deleteUser(String email) {
@@ -114,7 +107,6 @@ public class AppService {
 	
 	public List<Activity> getAllActivities(){
 		List<Activity> activities = (List<Activity>) activityRepository.findAll();
-		System.out.println("LES ACTIVITES ==== " + activities);
 		return (List<Activity>) activityRepository.findAll();
 	}
 	

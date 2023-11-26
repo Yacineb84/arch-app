@@ -1,5 +1,6 @@
 package myboot.myapp.web;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -58,33 +59,55 @@ public class AppRestController {
 	@PostConstruct
 	public void init() {
 		System.out.println("Start " + this);
-		if (appService.userRepository.count() == 0) {
-
-//			User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
-//			User user2 = new User("anis@gmail.com","Boussedra","Anis","Mon site Anis","25/08/1997","anis");
-//			User user3 = new User("fong@gmail.com","Fong","Cheko","Mon fongus","03/12/1995","fong");
-//			userService.signup(user1);
-//			userService.signup(user2);
-//			userService.signup(user3);
+		String[] users_firstname = {"Yacine","Nour","Assia","Kyllian","Sarah",
+				"Anis","Qylyane","Charazade","Mona","Eren","Mehdi","Bilal","Thierry","Gérard","Françoise","Cyril","Harchi",
+				"Mynnie","Myriam","Hafida","Apagnan","Crampter","Luc","Jean","Pascale","Pascal","Herver","Isabel","Leonard","Ninho"};
+		
+		String[] users_name = {"Boukhari","Boussedra","Bernardi","Jager","Werner","Parmentier","Chanssoi","Makela","Ornaran",
+				"Saidi","Oujjet","Plaisance","Espoir","Massat","Hoareau","Fridja","Dufrene","Hebari","Nebari","Ronaldo","Messi",
+				"Bougheraba","Inosuke","Tanjiro","Macaron","Lalou","Natoo","Pero","Silva","Rodriguez"
+		};
+		
+		String[] activity_nature = {"Stage","Expérience_professionnel","Projet","Formation"};
+		
+		String[] activity_title = {"Développement en React","Développement en Angular","Développement en VueJs", "Administration Base de Données",
+				"Sécurité d'une application", "Application web", "Front-end", "Back-end"};
+		
+		User[] list_users = new User[100000];
+		Activity[] list_activities = new Activity[1000];
+		for(int i = 0; i < 1000; i++) {
+			
+			int n = (int) (Math.random() * 4);
+			int m = (int) (Math.random() * 8);
+			int year = (int) ((Math.random() * 23) + 2000);
+			String nature = activity_nature[n];
+			String title = activity_title[m];
+			String description = "La description du " + activity_nature[n] + " avec " + activity_title[m] ;
+			String webAddress = "www."+ activity_nature[n] +".fr";
+			list_activities[i] = new Activity(year,nature,title,description,webAddress);
 			
 		}
-//		User user1 = new User("yac@gmail.com","Boukhari","Yacine","Mon site","18/01/1998","mdp");
-//		userService.signup(user1);
-		User user = new User("bilal@gmail.com","Saidi","Bilal","hypoman","10/01/2010","mdp",null);
-		Activity activity = new Activity(2023,"Développeur en entreprise","Developpeur Web Angular","3 ans chez CapgeMini","capge.com");
-		Cv cv = new Cv(new LinkedList<Activity>(),null);
 		
-		Cv cv2 = appService.addActivityToCv(cv, activity);
-		
-		User user2 = appService.addCvToUser(cv2, user);
-		
-		if (appService.activityRepository.count() == 0) {
-			Activity activity1 = new Activity(2023,"Stage","Developpeur Web","Stage de 6 mois chez Capgemini","capge.com");
-			Activity activity2 = new Activity(2022,"Projet","Catalogue d'animé","Projet de génie logiciel","mrAnime.com");
-			Activity activity3 = new Activity(2020,"Formation","React","Formation de 1mois sur le framework React","react.com");
-			appService.addActivity(activity1);
-			appService.addActivity(activity2);
-			appService.addActivity(activity3);
+		for(int i = 0; i < 100000; i++) {
+			int n = (int) (Math.random() * 30);
+			int p = (int) (Math.random() * 30);
+			int m = (int) (Math.random() * 100);
+			String email = users_name[n] + users_firstname[p] + m + "@gmail.com";
+			String name = users_name[n];
+			String firstName = users_firstname[p];
+			String site = "lesitede" + name + "-" + firstName + "-" + m +".fr";
+			String dateOfBirth = ((int)(Math.random() * 28) + 1) +"/" + ((int)(Math.random() * 12) + 1) +"/" + ((int) (Math.random() * 21) + 1980);
+			list_users[i] = appService.addUser(new User(email,name,firstName,site,dateOfBirth,"mdp"));
+			
+			
+			Cv cv = list_users[i].getCv();
+			appService.addActivityToCv(cv, list_activities[(int) (Math.random() * 1000)]);
+			appService.addActivityToCv(cv, list_activities[(int) (Math.random() * 1000)]);
+			appService.addActivityToCv(cv, list_activities[(int) (Math.random() * 1000)]);
+			appService.addActivityToCv(cv, list_activities[(int) (Math.random() * 1000)]);
+			
+			appService.addCvToUser(cv, list_users[i]);
+			
 		}
 		
 	}
@@ -99,14 +122,14 @@ public class AppRestController {
 
 		List<UserDTO> users = modelMapper.map(u, new TypeToken<List<UserDTO>>() {
 		}.getType());
+		Collections.shuffle(users);
+
 		return users;
 	}
 	
 	@GetMapping("/users/{email}")
 	public UserDTO getUser(@PathVariable String email) {
 		var u = appService.getUser(email);
-		System.out.println(u);
-		System.out.println(u.getCv());
 		UserDTO user = modelMapper.map(u, UserDTO.class);
 		return user;
 	
@@ -165,9 +188,7 @@ public class AppRestController {
 	
 	@PostMapping("/cv/{id}/activity")
 	public CvDTO postActivityToCv(@PathVariable Long id,@RequestBody @Valid Activity activity) {
-		System.out.println("AVANT GET");
 		Cv cv = appService.getCv(id);
-		System.out.println("APRES GET");
 		appService.addActivityToCv(cv, activity);
 		CvDTO cvDTO = modelMapper.map(appService.getCv(id), CvDTO.class);
 		return cvDTO;
@@ -197,7 +218,6 @@ public class AppRestController {
 		for (Activity activity : a) {
 			users.add(activity.getCv().getUser());
 		}
-		System.err.println(users);
 		return modelMapper.map(users, new TypeToken<List<UserDTO>>() {
 		}.getType());
 	}
@@ -215,7 +235,6 @@ public class AppRestController {
 	void deleteActivity(@PathVariable Long id) {
 		var a = appService.getActivity(id);
 		var c = appService.getCv(a.getCv().getId());
-		System.err.println("LE CV DANS DELETE : " + c);
 		appService.removeActivityToCv(c, a);
 	}
 	
