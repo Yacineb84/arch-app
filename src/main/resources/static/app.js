@@ -1,5 +1,4 @@
 const myApp = {
-
 	// Préparation des données
 	data() {
 		console.log("data");
@@ -15,12 +14,14 @@ const myApp = {
 			addPersonne: null,
 			errors: [],
 			isLogin: sessionStorage.getItem("token") != null,
-			log: null,
+			log: null
 		}
 	},
 
+
 	// Mise en place de l'application
 	mounted() {
+		
 		console.log("Mounted ");
 		this.axios = axios.create({
 						baseURL: 'http://localhost:8081/api/',
@@ -46,7 +47,7 @@ const myApp = {
 		this.getPersonnes();
 	
 	},
-
+	
 	methods: {
 		
 		getMe: function(){
@@ -66,7 +67,6 @@ const myApp = {
 				.then(r => {
 					console.log("Affichage des personnes");
 					this.personnes = r.data;
-
 				})
 		},
 		
@@ -89,10 +89,6 @@ const myApp = {
 					this.personnes = r.data;
 				})
 			}
-			
-		},
-		
-		search_activity: function(){
 			
 		},
 
@@ -171,15 +167,6 @@ const myApp = {
 					this.getPersonnes();
 				});
 		},
-
-		/*populateMovies: function() {
-			console.log("Populate");
-			this.axios.patch('/movies')
-				.then(r => {
-					console.log("Populate fait ! ")
-					this.getMovies();
-				});
-		},*/
 
 		listPersonnes: function() {
 			this.personne = null;

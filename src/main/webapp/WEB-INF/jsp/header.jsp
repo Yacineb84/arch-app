@@ -23,4 +23,5 @@
 	<script src="${vue_js}"></script>
 	<script src="${axios_js}"></script>
 </head>
+</head>
 <body>

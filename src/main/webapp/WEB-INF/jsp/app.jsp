@@ -31,7 +31,7 @@
 			class="btn btn-primary btn-sm" v-if="isLogin"
 			v-on:click="logout()">Se déconnecter</button>
 	</nav>
-
+	
 	<!-- Formulaire de connexion -->
 
 	<div class="container" v-if="(log != null)">
@@ -68,14 +68,14 @@
 				<th>Date de naissance</th>
 				<th>Contact</th>
 			</tr>
-			<tr v-for="p in personnes">
+			<tr v-for="p in personnes" :key="p.email">
 				<td>{{p.name}}</td>
 				<td>{{p.firstName}}</td>
 				<td>{{p.site}}</td>
 				<td>{{p.dateOfBirth}}</td>
 				<td>{{p.email}}</td>
 				<td>
-					<button class="btn btn-primary btn-sm" v-on:click="showPersonne(p)">Voir CV</button>
+					 <button class="btn btn-primary btn-sm" v-on:click="showPersonne(p)">Voir CV</button> 
 				</td>
 			</tr>
 		</table>
@@ -83,7 +83,7 @@
 
 
 	<!-- Affichage d'un CV -->
-	
+  
 	<div class="container" v-if="(personne != null)">
 		<h1>CV de {{personne.name}} {{personne.firstName}}</h1>
 

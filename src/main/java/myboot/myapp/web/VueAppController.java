@@ -12,4 +12,8 @@ public class VueAppController {
         return new ModelAndView("app");
     }
 
+    /*@RequestMapping(value = "app/cv/{email}")
+    private ModelAndView route() {
+        return new ModelAndView("app");
+    }*/
 }

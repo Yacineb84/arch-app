@@ -84,8 +84,7 @@ public class AppService {
 	}
 		
 	public void removeActivityToCv(Cv cv, Activity activity) {
-		var activities = cv.getActivities();
-//		activities.remove(activity);
+		var activities = cv.getActivities();//		activities.remove(activity);
 //		cv.setActivities(activities);
 		activity.setCv(null);
 		activityRepository.save(activity);
