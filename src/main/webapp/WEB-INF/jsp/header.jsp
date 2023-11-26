@@ -22,5 +22,12 @@
 	<script src="${bootstrap_js}"></script>
 	<script src="${vue_js}"></script>
 	<script src="${axios_js}"></script>
+	<style>
+	.bottone {margin-right:0;margin-left: auto;}
+	.navva{display:flex;justify-content:center;align-items:center;background-color:#F8F8FF;box-shadow: 5px 5px 5px 5px #DCDCDC;margin-bottom:30px}
+	#destra{margin-right:0;margin-left: auto;display:flex;flex-direction:row}
+	#ricerca{display:flex;flex-direction:column;margin-right:10px}
+	.inp_ricerca{margin-bottom:3px;width:250px}
+	</style>
 </head>
 <body>

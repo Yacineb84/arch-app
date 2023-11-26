@@ -14,6 +14,7 @@ const myApp = {
 			editable: null,
 			addPersonne: null,
 			errors: [],
+			inputDisabled: true,
 			isLogin: sessionStorage.getItem("token") != null,
 			log: null,
 		}
@@ -48,7 +49,9 @@ const myApp = {
 	},
 
 	methods: {
-		
+		toggleInput: function(){
+			this.inputDisabled = !this.inputDisabled;
+		},		
 		getMe: function(){
 			this.axios.get('/users/' + this.me)
 				.then(r => {
