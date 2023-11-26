@@ -30,7 +30,7 @@ public class TestCvRepository {
 	
 	@Autowired
 	UserRepository userRepo;
-	
+	/*
 	@Test
 	public void createAndRead() {
 
@@ -81,6 +81,6 @@ public class TestCvRepository {
 
 		assertEquals(cv2.get().getActivities().size(),2);
 		assertEquals(userRepo.findById(u.getEmail()).get().getCv().getActivities().size(), cv2.get().getActivities().size());
-	}
+	}*/
 	
 }

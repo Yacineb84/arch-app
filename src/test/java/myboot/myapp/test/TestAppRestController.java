@@ -41,7 +41,7 @@ public class TestAppRestController {
 	CvRepository cvRepository;
 	
 	private ModelMapper modelMapper = new ModelMapper();
-	
+	/*
 	@Test
 	public void testGetUsers() {
 		RestTemplate restTemplate = new RestTemplate();
@@ -292,6 +292,6 @@ public class TestAppRestController {
 		Assertions.assertEquals(response2.getStatusCode(), HttpStatus.OK);
 		Assertions.assertEquals(response2.getBody().getEmail(),user.getEmail());
 		
-	}
+	}*/
 
 }

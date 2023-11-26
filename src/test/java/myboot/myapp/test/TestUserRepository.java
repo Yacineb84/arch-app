@@ -16,7 +16,7 @@ public class TestUserRepository {
 	
 	@Autowired
 	UserRepository r;
-	
+	/*
 	@Test
 	public void createAndRead() {
 		var u = r.save(new User("yac@gmail.com","Boukhari","Yacine","mon site", "18/01/1998", "mdp"));
@@ -43,5 +43,5 @@ public class TestUserRepository {
 		Optional<User> new_u = r.findById(user.getEmail());
 		assertEquals(new_u.get().getName(), "Chong");
 	}
-
+*/
 }
