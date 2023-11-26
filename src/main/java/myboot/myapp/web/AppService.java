@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.experimental.var;
 import myboot.myapp.dao.ActivityRepository;
 import myboot.myapp.dao.CvRepository;
 import myboot.myapp.dao.UserRepository;

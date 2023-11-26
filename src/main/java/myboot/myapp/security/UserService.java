@@ -16,7 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import lombok.experimental.var;
+//import lombok.experimental.var;
 import myboot.myapp.dao.UserRepository;
 import myboot.myapp.model.Activity;
 import myboot.myapp.model.Cv;
