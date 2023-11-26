@@ -1,5 +1,7 @@
 package myboot.myapp.model;
 
+import java.util.LinkedList;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
