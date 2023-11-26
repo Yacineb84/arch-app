@@ -344,7 +344,7 @@
 	</div>
   
     <div class="container"   style="display:flex;flex-direction: column;margin-bottom: 5%;">
-      <h3 style="margin-bottom: 5%;">Mes CV</h3>
+      <h3 style="margin-bottom: 5%;">Mes activités</h3>
       <table class="table" style="align-self: center;align-content: center;align-items: center;">
         <tr>
           <th>Nature</th>

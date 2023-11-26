@@ -29,7 +29,7 @@ const myApp = {
 						baseURL: 'http://localhost:8081/api/',
 						timeout: 10000,
 						headers: { 'Content-Type': 'application/json',
-									/*'Authorization': 'Bearer ' + sessionStorage.getItem("token")*/},
+									},
 					});
 		if(this.isLogin){	
 			this.axios = axios.create({
